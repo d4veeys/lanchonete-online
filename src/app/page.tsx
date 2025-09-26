@@ -1,103 +1,110 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useMemo } from 'react';
+import { CategoryTabs } from '@/components/menu/CategoryTabs';
+import { ItemCard } from '@/components/menu/ItemCard';
+import { ItemModal } from '@/components/menu/ItemModal';
+import { MenuItem } from '@/types/menu';
+import { menuItems } from '@/data/menu-items';
+import { categories } from '@/data/categories';
+
+export default function HomePage() {
+  const [activeCategory, setActiveCategory] = useState('paes');
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const filteredItems = useMemo(() => {
+    return menuItems.filter(item => item.category === activeCategory);
+  }, [activeCategory]);
+
+  const handleItemClick = (item: MenuItem) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      // No Hero Section, substitua por:
+<section className="relative gradient-bg py-16 overflow-hidden">
+  <div className="absolute inset-0 bg-black/5"></div>
+  <div className="container mx-auto px-4 relative z-10">
+    <div className="text-center max-w-3xl mx-auto">
+      <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4 fade-in">
+        Cardápio <span className="text-orange-500">Online</span>
+      </h1>
+      <p className="text-xl text-gray-700 mb-8 leading-relaxed">
+        Descubra os sabores autênticos dos nossos hambúrgueres artesanais. 
+        Feitos com ingredientes selecionados e muito amor!
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full font-semibold">
+          🚀 Entrega Rápida
+        </span>
+        <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold">
+          💰 Preço Justo
+        </span>
+        <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold">
+          👍 Qualidade Garantida
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  {/* Elementos decorativos */}
+  <div className="absolute top-10 left-10 w-20 h-20 bg-orange-300/20 rounded-full blur-xl"></div>
+  <div className="absolute bottom-10 right-10 w-32 h-32 bg-orange-400/10 rounded-full blur-2xl"></div>
+</section>
+      {/* Category Tabs */}
+      <CategoryTabs
+        categories={categories}
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Menu Items */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">
+            {categories.find(c => c.id === activeCategory)?.name}
+          </h2>
+          <span className="text-gray-600">
+            {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'itens'}
+          </span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {filteredItems.length === 0 ? (
+          <div className="text-center py-12">
+            <span className="text-6xl mb-4 block">🍽️</span>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Nenhum item nesta categoria
+            </h3>
+            <p className="text-gray-600">Em breve novidades!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => (
+              <ItemCard
+                key={item.id}
+                item={item}
+                onCustomize={handleItemClick}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Modal de Personalização */}
+      <ItemModal
+        item={selectedItem}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </div>
   );
 }
